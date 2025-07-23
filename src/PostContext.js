@@ -10,7 +10,7 @@ function createRandomPost() {
 //1) CREATE CONTEXT
 
 const PostContext = createContext();
-function PostProvider() {
+function PostProvider({ children }) {
   const [posts, setPosts] = useState(() =>
     Array.from({ length: 30 }, () => createRandomPost())
   );
@@ -44,12 +44,14 @@ function PostProvider() {
         searchQuery,
         setSearchQuery,
       }}
-    ></PostContext.Provider>
+    >
+      {children}
+    </PostContext.Provider>
   );
 }
 //avec cette methode on doit respecter la syntaxe de l'export dans le fichier  de l'mportation
-function usePosts() {
-  const context = useContext(PostContext);
-  return context;
-}
-export { PostContext, usePosts };
+// function usePosts() {
+//   const context = useContext(PostContext);
+//   return context;
+// }
+export { PostProvider, PostContext };
