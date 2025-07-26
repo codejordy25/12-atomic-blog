@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useState } from "react";
 import { faker } from "@faker-js/faker";
 function createRandomPost() {
   return {
@@ -10,6 +10,10 @@ function createRandomPost() {
 //1) CREATE CONTEXT
 
 const PostContext = createContext();
+// Children c'est pour donner accés au consommateur d'avoir accés à ces donné
+if (PostContext === undefined) {
+  throw new Error("the value was used outside provider");
+}
 function PostProvider({ children }) {
   const [posts, setPosts] = useState(() =>
     Array.from({ length: 30 }, () => createRandomPost())
@@ -34,6 +38,7 @@ function PostProvider({ children }) {
     setPosts([]);
   }
   return (
+    //2) PROVIDE VALUE TO CHILD COMPONENTS
     //ici nous renvoyonns le contexte, mais nous ne faions rien avec les enfants
     //Nous allons le faire dans App.js
     <PostContext.Provider
