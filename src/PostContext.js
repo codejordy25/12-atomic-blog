@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useContext } from "react";
 import { faker } from "@faker-js/faker";
 function createRandomPost() {
   return {
@@ -11,9 +11,7 @@ function createRandomPost() {
 
 const PostContext = createContext();
 // Children c'est pour donner accés au consommateur d'avoir accés à ces donné
-if (PostContext === undefined) {
-  throw new Error("the value was used outside provider");
-}
+
 function PostProvider({ children }) {
   const [posts, setPosts] = useState(() =>
     Array.from({ length: 30 }, () => createRandomPost())
@@ -55,8 +53,11 @@ function PostProvider({ children }) {
   );
 }
 //avec cette methode on doit respecter la syntaxe de l'export dans le fichier  de l'mportation
-// function usePosts() {
-//   const context = useContext(PostContext);
-//   return context;
-// }
-export { PostProvider, PostContext };
+function usePosts() {
+  const context = useContext(PostContext);
+  if (context === undefined) {
+    throw new Error("the PostContext was used outside the PostProvider");
+  }
+  return context;
+}
+export { PostProvider, usePosts };
