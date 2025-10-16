@@ -1,4 +1,4 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useMemo } from "react";
 import { faker } from "@faker-js/faker";
 function createRandomPost() {
   return {
@@ -35,21 +35,22 @@ function PostProvider({ children }) {
   function handleClearPosts() {
     setPosts([]);
   }
+
+  const value = useMemo(() => {
+    return {
+      posts: searchedPosts,
+      onAddPost: handleAddPost,
+      onClearPosts: handleClearPosts,
+      searchQuery,
+      setSearchQuery,
+    };
+  }, [searchQuery, searchedPosts]);
+
   return (
     //2) PROVIDE VALUE TO CHILD COMPONENTS
     //ici nous renvoyonns le contexte, mais nous ne faions rien avec les enfants
     //Nous allons le faire dans App.js
-    <PostContext.Provider
-      value={{
-        posts: searchedPosts,
-        onAddPost: handleAddPost,
-        onClearPosts: handleClearPosts,
-        searchQuery,
-        setSearchQuery,
-      }}
-    >
-      {children}
-    </PostContext.Provider>
+    <PostContext.Provider value={value}>{children}</PostContext.Provider>
   );
 }
 //avec cette methode on doit respecter la syntaxe de l'export dans le fichier  de l'mportation
